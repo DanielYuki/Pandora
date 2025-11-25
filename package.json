@@ -1,0 +1,61 @@
+{
+  "name": "pandora",
+  "version": "1.0.0",
+  "description": "Pandora is a messaging gateway template for connecting any messaging platform to AI agents through any interface.",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/app.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "type-check": "tsc --noEmit",
+    "proto:generate": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src/lib/generated --ts_proto_opt=esModuleInterop=true --ts_proto_opt=outputServices=grpc-js --proto_path=src/lib/proto src/lib/proto/inference.proto",
+    "docker:build": "docker build -t pandora .",
+    "docker:run": "docker run -p 8080:8080 --env-file .env pandora",
+    "docker:compose": "docker-compose up -d --build",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "blackbox",
+    "agent",
+    "messaging",
+    "gateway",
+    "template"
+  ],
+  "author": "yoru-labs",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/google-protobuf": "^3.15.12",
+    "@types/node": "^22.15.30",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.5.3",
+    "ts-proto": "^2.7.5",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.6.0",
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.15",
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "form-data": "^4.0.3",
+    "helmet": "^7.1.0",
+    "openai": "^5.9.0",
+    "redis": "^4.7.0",
+    "winston": "^3.11.0",
+    "zod": "^3.25.55"
+  }
+}

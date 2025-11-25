@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package inference;
+
+service InferenceService {
+    rpc Infer (InferenceRequest) returns (InferenceResponse);
+}
+
+message InferenceRequest {
+    string user_id = 1;
+    string user_email = 2;
+    string user_name = 3;      
+    string user_input = 4;
+}
+
+message InferenceResponse {
+    string answer = 1;
+    bool success = 2;
+    string error_message = 3;
+    int64 timestamp = 4;
+}
