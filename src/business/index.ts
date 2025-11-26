@@ -1,2 +1,1 @@
-export * from './process-message.service';
-
+export * from './handlers';

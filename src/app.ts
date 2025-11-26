@@ -3,7 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 import { WebhookController } from '@/api/controllers';
-import { ProcessMessageService } from '@/business';
+import { ProcessMessageHandler } from '@/business/handlers';
+import { InMemoryEventBus } from '@/infrastructure/events';
 import { WhatsAppAdapter, GrpcAgentAdapter, UserCacheAdapter } from '@/infrastructure';
 import { RedisService } from '@/services/redis.service';
 import logger from '@/utils/logger';
@@ -18,20 +19,19 @@ class Application {
     this.app = express();
     this.redis = RedisService.getInstance();
 
-    // Initialize adapters
+    // Create event bus
+    const eventBus = new InMemoryEventBus();
+
+    // Create adapters
     const whatsappAdapter = new WhatsAppAdapter();
     const agentAdapter = new GrpcAgentAdapter();
     const userCacheAdapter = new UserCacheAdapter();
 
-    // Initialize business services
-    const processMessageService = new ProcessMessageService(
-      whatsappAdapter,
-      agentAdapter,
-      userCacheAdapter
-    );
+    // Create event handlers (subscribe to events)
+    new ProcessMessageHandler(eventBus, whatsappAdapter, agentAdapter, userCacheAdapter);
 
-    // Initialize controllers
-    this.webhookController = new WebhookController(processMessageService);
+    // Create controllers (publish events)
+    this.webhookController = new WebhookController(eventBus);
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -56,9 +56,9 @@ class Application {
   private initializeRoutes(): void {
     this.app.get('/health', this.webhookController.healthCheck);
 
-    this.app.get('/', (req, res) => {
+    this.app.get('/', (_req, res) => {
       res.json({
-        message: 'WhatsApp Server is running',
+        message: 'Messaging Gateway is running',
         timestamp: new Date().toISOString(),
         version: '1.0.0',
       });
@@ -77,7 +77,7 @@ class Application {
 
   private initializeErrorHandling(): void {
     this.app.use(
-      (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
         logger.error('Unhandled error:', err);
 
         const isDevelopment = config.NODE_ENV === 'development';
@@ -110,14 +110,14 @@ class Application {
     try {
       await this.redis.connect();
     } catch (error) {
-      logger.warn('⚠️ Redis connection failed, continuing without Redis features:', error);
+      logger.warn('Redis connection failed, continuing without Redis features:', error);
     }
 
     this.app.listen(port, host, () => {
-      logger.info(`🚀 WhatsApp server running on ${host}:${port}`);
-      logger.info(`📱 Webhook URL: http://${host}:${port}/webhook`);
-      logger.info(`🏥 Health check: http://${host}:${port}/health`);
-      logger.info(`🔧 Environment: ${config.NODE_ENV}`);
+      logger.info(`Messaging Gateway running on ${host}:${port}`);
+      logger.info(`Webhook URL: http://${host}:${port}/webhook`);
+      logger.info(`Health check: http://${host}:${port}/health`);
+      logger.info(`Environment: ${config.NODE_ENV}`);
     });
   }
 
@@ -137,7 +137,7 @@ class Application {
 
 async function main() {
   try {
-    logger.info('🚀 Starting WhatsApp server...');
+    logger.info('Starting Messaging Gateway...');
     const app = new Application();
     await app.start();
   } catch (error) {
