@@ -5,6 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",
+    "dev:cli": "tsx src/app.ts --cli",
     "build": "tsc && tsc-alias",
     "start": "node dist/app.js",
     "format": "prettier --write .",
@@ -25,7 +26,7 @@
     "gateway",
     "template"
   ],
-  "author": "yoru-labs",
+  "author": "DanielYuki",
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {

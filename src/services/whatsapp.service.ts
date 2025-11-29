@@ -8,6 +8,10 @@ export class WhatsAppService {
   private phoneNumberId: string;
 
   constructor() {
+    if (!config.WA_PHONE_NUMBER_ID || !config.CLOUD_API_ACCESS_TOKEN) {
+      throw new Error('WhatsApp configuration missing: WA_PHONE_NUMBER_ID and CLOUD_API_ACCESS_TOKEN are required');
+    }
+
     this.phoneNumberId = config.WA_PHONE_NUMBER_ID;
 
     this.client = axios.create({

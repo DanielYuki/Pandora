@@ -1,33 +1,48 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import * as readline from 'readline';
 
 import { WebhookController } from '@/api/controllers';
 import { ProcessMessageHandler } from '@/business/handlers';
 import { InMemoryEventBus } from '@/infrastructure/events';
-import { WhatsAppAdapter, GrpcAgentAdapter } from '@/infrastructure';
+import { IEventBus } from '@/core/interfaces';
+import { WhatsAppAdapter, CliAdapter, OpenAIAgentAdapter } from '@/infrastructure';
+import { MessageReceivedEvent } from '@/core/events';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 
 class Application {
   public app: express.Application;
   private webhookController: WebhookController;
+  private eventBus: IEventBus;
+  private cliEnabled: boolean;
 
-  constructor() {
+  constructor(options: { cli?: boolean } = {}) {
     this.app = express();
+    this.cliEnabled = options.cli ?? false;
 
-    // Create event bus
-    const eventBus = new InMemoryEventBus();
+    // Create shared event bus
+    this.eventBus = new InMemoryEventBus();
 
-    // Create adapters
-    const messagingAdapter = new WhatsAppAdapter();
-    const agentAdapter = new GrpcAgentAdapter();
+    // ============================================================
+    // ADAPTERS CONFIGURATION
+    // Change these to use different messaging platforms or AI agents
+    // ============================================================
+
+    // Messaging adapter: WhatsAppAdapter, TelegramAdapter, CliAdapter
+    const messagingAdapter = this.cliEnabled ? new CliAdapter() : new WhatsAppAdapter();
+
+    // AI Agent adapter: OpenAIAgentAdapter, GrpcAgentAdapter, HttpAgentAdapter, MockAgentAdapter
+    const agentAdapter = new OpenAIAgentAdapter();
+
+    // ============================================================
 
     // Create event handlers (subscribe to events)
-    new ProcessMessageHandler(eventBus, messagingAdapter, agentAdapter);
+    new ProcessMessageHandler(this.eventBus, messagingAdapter, agentAdapter);
 
     // Create controllers (publish events)
-    this.webhookController = new WebhookController(eventBus);
+    this.webhookController = new WebhookController(this.eventBus);
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -57,6 +72,7 @@ class Application {
         message: 'Messaging Gateway is running',
         timestamp: new Date().toISOString(),
         version: '1.0.0',
+        cli: this.cliEnabled,
       });
     });
 
@@ -99,6 +115,64 @@ class Application {
     process.on('SIGINT', this.gracefulShutdown.bind(this));
   }
 
+  private startCli(): void {
+    // Suppress verbose logging for cleaner CLI
+    logger.level = 'warn';
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    console.log('');
+    console.log('╔════════════════════════════════════════════════════════════╗');
+    console.log('║              Pandora CLI - Messaging Gateway               ║');
+    console.log('╠════════════════════════════════════════════════════════════╣');
+    console.log(`║  Server: http://0.0.0.0:${config.PORT}`.padEnd(61) + '║');
+    console.log('║  Type your message and press Enter to send                 ║');
+    console.log('║  Type "exit" or press Ctrl+C to quit                       ║');
+    console.log('╚════════════════════════════════════════════════════════════╝');
+    console.log('');
+
+    const prompt = () => {
+      rl.question('You: ', async input => {
+        const trimmed = input.trim();
+
+        if (!trimmed) {
+          prompt();
+          return;
+        }
+
+        if (trimmed.toLowerCase() === 'exit') {
+          console.log('\nGoodbye! 👋\n');
+          rl.close();
+          process.exit(0);
+        }
+
+        // Publish message event
+        await this.eventBus.publish(
+          new MessageReceivedEvent({
+            messageId: `cli_msg_${Date.now()}`,
+            from: 'cli-user',
+            platform: 'cli',
+            content: trimmed,
+            contactName: 'CLI User',
+          })
+        );
+
+        // Small delay to let the response print before next prompt
+        setTimeout(prompt, 100);
+      });
+    };
+
+    prompt();
+
+    rl.on('close', () => {
+      console.log('\nGoodbye! 👋\n');
+      process.exit(0);
+    });
+  }
+
   public async start(): Promise<void> {
     const port = config.PORT;
     const host = '0.0.0.0';
@@ -109,6 +183,10 @@ class Application {
       logger.info(`Health check: http://${host}:${port}/health`);
       logger.info(`Environment: ${config.NODE_ENV}`);
     });
+
+    if (this.cliEnabled) {
+      this.startCli();
+    }
   }
 
   private gracefulShutdown(signal: string): void {
@@ -118,9 +196,13 @@ class Application {
 }
 
 async function main() {
+  const args = process.argv.slice(2);
+  const cliEnabled = args.includes('--cli');
+
   try {
     logger.info('Starting Messaging Gateway...');
-    const app = new Application();
+
+    const app = new Application({ cli: cliEnabled });
     await app.start();
   } catch (error) {
     logger.error('Failed to start application:', error);
