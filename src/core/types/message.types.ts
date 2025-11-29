@@ -4,14 +4,12 @@ export interface IncomingMessage {
   platform: string;
   content: string;
   contactName?: string;
-  replyTo?: string;
   timestamp: Date;
 }
 
 export interface OutgoingMessage {
   to: string;
   content: string;
-  replyTo?: string;
 }
 
 export interface MessageResult {
@@ -19,4 +17,3 @@ export interface MessageResult {
   messageId?: string;
   error?: string;
 }
-

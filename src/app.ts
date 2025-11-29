@@ -5,30 +5,26 @@ import helmet from 'helmet';
 import { WebhookController } from '@/api/controllers';
 import { ProcessMessageHandler } from '@/business/handlers';
 import { InMemoryEventBus } from '@/infrastructure/events';
-import { WhatsAppAdapter, GrpcAgentAdapter, UserCacheAdapter } from '@/infrastructure';
-import { RedisService } from '@/services/redis.service';
+import { WhatsAppAdapter, GrpcAgentAdapter } from '@/infrastructure';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 
 class Application {
   public app: express.Application;
   private webhookController: WebhookController;
-  private redis: RedisService;
 
   constructor() {
     this.app = express();
-    this.redis = RedisService.getInstance();
 
     // Create event bus
     const eventBus = new InMemoryEventBus();
 
     // Create adapters
-    const whatsappAdapter = new WhatsAppAdapter();
+    const messagingAdapter = new WhatsAppAdapter();
     const agentAdapter = new GrpcAgentAdapter();
-    const userCacheAdapter = new UserCacheAdapter();
 
     // Create event handlers (subscribe to events)
-    new ProcessMessageHandler(eventBus, whatsappAdapter, agentAdapter, userCacheAdapter);
+    new ProcessMessageHandler(eventBus, messagingAdapter, agentAdapter);
 
     // Create controllers (publish events)
     this.webhookController = new WebhookController(eventBus);
@@ -107,12 +103,6 @@ class Application {
     const port = config.PORT;
     const host = '0.0.0.0';
 
-    try {
-      await this.redis.connect();
-    } catch (error) {
-      logger.warn('Redis connection failed, continuing without Redis features:', error);
-    }
-
     this.app.listen(port, host, () => {
       logger.info(`Messaging Gateway running on ${host}:${port}`);
       logger.info(`Webhook URL: http://${host}:${port}/webhook`);
@@ -121,17 +111,9 @@ class Application {
     });
   }
 
-  private async gracefulShutdown(signal: string): Promise<void> {
-    logger.info(`Received ${signal}. Starting graceful shutdown...`);
-
-    try {
-      await this.redis.disconnect();
-      logger.info('Graceful shutdown completed');
-      process.exit(0);
-    } catch (error) {
-      logger.error('Error during graceful shutdown:', error);
-      process.exit(1);
-    }
+  private gracefulShutdown(signal: string): void {
+    logger.info(`Received ${signal}. Shutting down...`);
+    process.exit(0);
   }
 }
 

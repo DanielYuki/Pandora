@@ -1,2 +1,1 @@
-export * from './user.entity';
-
+// Entities will be added here as needed

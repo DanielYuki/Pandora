@@ -6,7 +6,6 @@ export interface MessageReceivedPayload {
   platform: string;
   content: string;
   contactName?: string;
-  replyTo?: string;
 }
 
 export class MessageReceivedEvent implements DomainEvent {
@@ -19,4 +18,3 @@ export class MessageReceivedEvent implements DomainEvent {
     this.id = `msg_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
   }
 }
-

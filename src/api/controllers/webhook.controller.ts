@@ -68,7 +68,6 @@ export class WebhookController {
 
       logger.info(`Message from ${contactName || message.from}: ${content}`);
 
-      // Publish event instead of processing directly
       await this.eventBus.publish(
         new MessageReceivedEvent({
           messageId: message.id,
@@ -76,7 +75,6 @@ export class WebhookController {
           platform: 'whatsapp',
           content,
           contactName,
-          replyTo: message.context?.message_id,
         })
       );
     }

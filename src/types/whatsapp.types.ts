@@ -1,4 +1,4 @@
-// === WHATSAPP WEBHOOK TYPES ===
+// WhatsApp Webhook Types
 
 export interface WhatsAppWebhookMessage {
   id: string;
@@ -7,7 +7,6 @@ export interface WhatsAppWebhookMessage {
   type: string;
   timestamp: string;
   text?: { body: string };
-  context?: { message_id: string };
 }
 
 export interface WhatsAppWebhookPayload {
@@ -26,27 +25,15 @@ export interface WhatsAppWebhookPayload {
           wa_id: string;
         }>;
         messages?: WhatsAppWebhookMessage[];
-        statuses?: Array<{
-          id: string;
-          status: string;
-          timestamp: string;
-          recipient_id: string;
-        }>;
       };
       field: string;
     }>;
   }>;
 }
 
-// === SERVICE RESPONSE TYPES ===
+// Generic Response Types
 
 export interface SendMessageResponse {
-  success: boolean;
-  messageId?: string;
-  error?: string;
-}
-
-export interface MessageProcessingResult {
   success: boolean;
   messageId?: string;
   error?: string;

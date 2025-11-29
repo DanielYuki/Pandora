@@ -11,11 +11,8 @@ const envSchema = z.object({
   WA_PHONE_NUMBER_ID: z.string(),
   WA_WEBHOOK_TOKEN: z.string(),
 
-  // Server Configuration
+  // AI Agent Configuration
   AGENT_SERVER_ADDRESS: z.string().default('localhost:50051'),
-
-  // Redis Configuration
-  REDIS_URL: z.string().optional().default('redis://localhost:6379'),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('debug'),
@@ -24,7 +21,7 @@ const envSchema = z.object({
 const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
-  console.error('❌ Invalid environment variables:', _env.error.format());
+  console.error('Invalid environment variables:', _env.error.format());
   throw new Error('Invalid environment variables.');
 }
 

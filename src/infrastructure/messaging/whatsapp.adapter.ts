@@ -9,23 +9,7 @@ export class WhatsAppAdapter implements IMessagingService {
     this.whatsappService = new WhatsAppService();
   }
 
-  async sendTextMessage(
-    to: string,
-    text: string,
-    replyToMessageId?: string
-  ): Promise<SendMessageResponse> {
-    return this.whatsappService.sendTextMessage(to, text, replyToMessageId);
-  }
-
-  async markAsRead(messageId: string): Promise<SendMessageResponse> {
-    return this.whatsappService.markAsRead(messageId);
-  }
-
-  async startManagedTyping(to: string, messageId: string): Promise<void> {
-    return this.whatsappService.startManagedTyping(to, messageId);
-  }
-
-  stopManagedTyping(to: string): void {
-    return this.whatsappService.stopManagedTyping(to);
+  async sendTextMessage(to: string, text: string): Promise<SendMessageResponse> {
+    return this.whatsappService.sendTextMessage(to, text);
   }
 }
