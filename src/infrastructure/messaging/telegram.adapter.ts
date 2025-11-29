@@ -1,5 +1,5 @@
 import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
-import { SendMessageResponse } from '@/types/whatsapp.types';
+import { MessageResult } from '@/core/entities';
 import logger from '@/utils/logger';
 
 /**
@@ -10,7 +10,7 @@ export class TelegramAdapter implements IMessagingService {
     logger.warn('TelegramAdapter is a stub - implement when needed');
   }
 
-  async sendTextMessage(to: string, text: string): Promise<SendMessageResponse> {
+  async sendTextMessage(to: string, text: string): Promise<MessageResult> {
     logger.info(`[Telegram Stub] Would send to ${to}: ${text}`);
     return { success: true, messageId: `telegram_${Date.now()}` };
   }

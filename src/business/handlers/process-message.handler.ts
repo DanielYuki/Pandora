@@ -25,10 +25,8 @@ export class ProcessMessageHandler {
 
       // Send to AI agent
       const response = await this.aiAgent.infer({
-        userId: from,
-        userEmail: '',
-        userName: contactName || from,
-        userInput: content,
+        id: from,
+        input: content,
       });
 
       if (response.success && response.answer) {

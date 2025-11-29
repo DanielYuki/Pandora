@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import config from '@/utils/config';
 import logger from '@/utils/logger';
-import { SendMessageResponse } from '@/types/whatsapp.types';
+import { MessageResult } from '@/core/entities';
 
 export class WhatsAppService {
   private client: AxiosInstance;
@@ -20,7 +20,7 @@ export class WhatsAppService {
     });
   }
 
-  async sendTextMessage(to: string, text: string): Promise<SendMessageResponse> {
+  async sendTextMessage(to: string, text: string): Promise<MessageResult> {
     try {
       const payload = {
         messaging_product: 'whatsapp',

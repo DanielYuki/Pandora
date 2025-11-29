@@ -1,6 +1,6 @@
 import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
+import { MessageResult } from '@/core/entities';
 import { WhatsAppService } from '@/services/whatsapp.service';
-import { SendMessageResponse } from '@/types/whatsapp.types';
 
 export class WhatsAppAdapter implements IMessagingService {
   private whatsappService: WhatsAppService;
@@ -9,7 +9,7 @@ export class WhatsAppAdapter implements IMessagingService {
     this.whatsappService = new WhatsAppService();
   }
 
-  async sendTextMessage(to: string, text: string): Promise<SendMessageResponse> {
+  async sendTextMessage(to: string, text: string): Promise<MessageResult> {
     return this.whatsappService.sendTextMessage(to, text);
   }
 }

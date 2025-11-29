@@ -21,10 +21,8 @@ export class GraphQLAgentAdapter implements IAIAgent {
         query,
         variables: {
           input: {
-            userId: request.userId,
-            userEmail: request.userEmail,
-            userName: request.userName,
-            userInput: request.userInput,
+            id: request.id,
+            input: request.input,
           },
         },
       });
@@ -51,4 +49,3 @@ export class GraphQLAgentAdapter implements IAIAgent {
     }
   }
 }
-

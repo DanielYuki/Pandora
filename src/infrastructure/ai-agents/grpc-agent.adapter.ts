@@ -12,10 +12,10 @@ export class GrpcAgentAdapter implements IAIAgent {
   async infer(request: AgentRequest): Promise<AgentResponse> {
     try {
       const response = await this.client.infer({
-        userId: request.userId,
-        userEmail: request.userEmail,
-        userName: request.userName,
-        userInput: request.userInput,
+        userId: request.id,
+        userEmail: '',
+        userName: '',
+        userInput: request.input,
       });
 
       return {

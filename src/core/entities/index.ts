@@ -1,1 +1,1 @@
-// Entities will be added here as needed
+export * from './message.entity';

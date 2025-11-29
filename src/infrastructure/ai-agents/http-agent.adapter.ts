@@ -8,10 +8,8 @@ export class HttpAgentAdapter implements IAIAgent {
   async infer(request: AgentRequest): Promise<AgentResponse> {
     try {
       const response = await axios.post<AgentResponse>(this.endpoint, {
-        userId: request.userId,
-        userEmail: request.userEmail,
-        userName: request.userName,
-        userInput: request.userInput,
+        id: request.id,
+        input: request.input,
       });
 
       return {
@@ -28,4 +26,3 @@ export class HttpAgentAdapter implements IAIAgent {
     }
   }
 }
-

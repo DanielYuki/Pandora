@@ -1,5 +1,5 @@
-import { SendMessageResponse } from '@/types/whatsapp.types';
+import { MessageResult } from '@/core/entities';
 
 export interface IMessagingService {
-  sendTextMessage(to: string, text: string): Promise<SendMessageResponse>;
+  sendTextMessage(to: string, text: string): Promise<MessageResult>;
 }

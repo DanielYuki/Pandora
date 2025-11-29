@@ -1,4 +1,4 @@
-// WhatsApp Webhook Types
+// WhatsApp-specific Webhook Types
 
 export interface WhatsAppWebhookMessage {
   id: string;
@@ -29,12 +29,4 @@ export interface WhatsAppWebhookPayload {
       field: string;
     }>;
   }>;
-}
-
-// Generic Response Types
-
-export interface SendMessageResponse {
-  success: boolean;
-  messageId?: string;
-  error?: string;
 }

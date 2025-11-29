@@ -1,8 +1,6 @@
 export interface AgentRequest {
-  userId: string;
-  userEmail: string;
-  userName: string;
-  userInput: string;
+  id: string;
+  input: string;
 }
 
 export interface AgentResponse {
