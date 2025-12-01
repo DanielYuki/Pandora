@@ -7,8 +7,7 @@ import { MessageResult } from '@/core/entities';
  */
 export class CliAdapter implements IMessagingService {
   async sendTextMessage(to: string, text: string): Promise<MessageResult> {
-    console.log(`\n🤖 Agent: ${text}\n`);
+    console.log(`\nAgent: ${text}\n`);
     return { success: true, messageId: `cli_${Date.now()}` };
   }
 }
-

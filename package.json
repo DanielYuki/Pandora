@@ -4,8 +4,7 @@
   "description": "Pandora is a messaging gateway template for connecting any messaging platform to AI agents through any interface.",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "dev:cli": "tsx src/app.ts --cli",
+    "dev": "tsx src/app.ts",
     "build": "tsc && tsc-alias",
     "start": "node dist/app.js",
     "format": "prettier --write .",
