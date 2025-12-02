@@ -6,7 +6,7 @@ import { WhatsAppWebhookController, TelegramWebhookController } from '@/api/cont
 import { ProcessMessageHandler } from '@/business/handlers';
 import { InMemoryEventBus } from '@/infrastructure/events';
 import { IEventBus, IMessagingService, IAIAgent } from '@/core/interfaces';
-import { WhatsAppAdapter, CliAdapter, OpenAIAgentAdapter } from '@/infrastructure';
+import { WhatsAppAdapter, CliAdapter, OpenAIAgentAdapter, TelegramAdapter } from '@/infrastructure';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 import { CliManager } from '@/utils/cli-manager';
@@ -33,7 +33,7 @@ class Application {
     logger.info('📦 Adapters Configuration');
 
     // Messaging adapter: WhatsAppAdapter, TelegramAdapter, CliAdapter
-    this.messagingAdapter = new CliAdapter(); // ? WHATSAPP, TELEGRAM, OR CLI ADAPTER
+    this.messagingAdapter = new TelegramAdapter(); // ? WHATSAPP, TELEGRAM, OR CLI ADAPTER
     logger.info(`Messaging adapter: ${this.messagingAdapter.constructor.name}`);
 
     // AI Agent adapter: OpenAIAgentAdapter, GrpcAgentAdapter, HttpAgentAdapter, MockAgentAdapter
@@ -80,6 +80,7 @@ class Application {
       });
     });
 
+    // TODO: Review webhook setup architecture
     // WhatsApp webhook routes
     this.app.get('/webhook/whatsapp', this.whatsappWebhookController.handleVerification);
     this.app.post('/webhook/whatsapp', this.whatsappWebhookController.handleWebhook);

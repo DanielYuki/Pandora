@@ -11,6 +11,10 @@ const envSchema = z.object({
   WA_PHONE_NUMBER_ID: z.string().optional(),
   WA_WEBHOOK_TOKEN: z.string().optional(),
 
+  // Telegram Configuration
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_WEBHOOK_SECRET: z.string().optional(),
+
   // AI Agent Configuration
   AGENT_SERVER_ADDRESS: z.string().default('localhost:50051'),
   OPENAI_API_KEY: z.string().optional(),

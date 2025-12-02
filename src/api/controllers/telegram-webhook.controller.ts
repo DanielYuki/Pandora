@@ -1,21 +1,35 @@
 import { Request, Response } from 'express';
+import { TelegramUpdate } from '@/types/telegram.types';
 import { IEventBus } from '@/core/interfaces/event-bus.interface';
 import { MessageReceivedEvent } from '@/core/events/message-received.event';
 import logger from '@/utils/logger';
+import config from '@/utils/config';
 
 /**
- * Telegram webhook controller stub - implement when needed
+ * Telegram webhook controller for handling incoming Telegram updates.
+ * Receives webhook requests, validates them, and publishes domain events.
  */
 export class TelegramWebhookController {
   constructor(private eventBus: IEventBus) {}
 
   handleWebhook = async (req: Request, res: Response): Promise<void> => {
     try {
-      // Acknowledge immediately
+      // Verify secret token if configured
+      if (config.TELEGRAM_WEBHOOK_SECRET) {
+        const secretToken = req.headers['x-telegram-bot-api-secret-token'];
+        if (secretToken !== config.TELEGRAM_WEBHOOK_SECRET) {
+          logger.warn('Telegram webhook secret token mismatch');
+          res.status(403).send('Forbidden');
+          return;
+        }
+      }
+
+      // Acknowledge immediately (Telegram expects quick response)
       res.status(200).send('OK');
 
+      // Process payload asynchronously
       setImmediate(() => {
-        this.processPayload(req.body).catch(error => {
+        this.processPayload(req.body as TelegramUpdate).catch(error => {
           logger.error('Telegram webhook processing error:', error);
         });
       });
@@ -27,35 +41,33 @@ export class TelegramWebhookController {
     }
   };
 
-  private async processPayload(payload: any): Promise<void> {
-    // TODO: Implement Telegram webhook payload parsing
-    // Telegram Update object structure:
-    // {
-    //   update_id: number,
-    //   message?: {
-    //     message_id: number,
-    //     from: { id: number, first_name: string, ... },
-    //     chat: { id: number, type: string, ... },
-    //     date: number,
-    //     text?: string,
-    //   }
-    // }
+  private async processPayload(update: TelegramUpdate): Promise<void> {
+    // Telegram sends one update per webhook (unlike WhatsApp which can send multiple)
+    const message = update.message || update.edited_message;
 
-    const message = payload.message;
-    if (!message || !message.text) {
-      logger.debug('No text message in Telegram payload');
+    if (!message) {
+      logger.debug('No message in Telegram update');
       return;
     }
 
-    const chatId = message.chat?.id?.toString();
+    // Only process text messages for now
+    if (!message.text) {
+      logger.debug(`Skipping non-text message: ${message.message_id}`);
+      return;
+    }
+
+    // Extract user information
+    const chatId = message.chat.id.toString();
     const content = message.text;
-    const contactName = message.from?.first_name;
+    const contactName =
+      message.from?.first_name ||
+      (message.from?.username ? `@${message.from.username}` : undefined);
 
     logger.info(`[Telegram] Message from ${contactName || chatId}: ${content}`);
 
     await this.eventBus.publish(
       new MessageReceivedEvent({
-        messageId: message.message_id?.toString() || `tg_${Date.now()}`,
+        messageId: message.message_id.toString(),
         from: chatId,
         platform: 'telegram',
         content,
@@ -64,4 +76,3 @@ export class TelegramWebhookController {
     );
   }
 }
-
