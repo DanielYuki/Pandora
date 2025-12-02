@@ -5,7 +5,7 @@ import { MessageReceivedEvent } from '@/core/events/message-received.event';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 
-export class WebhookController {
+export class WhatsAppWebhookController {
   constructor(private eventBus: IEventBus) {}
 
   handleVerification = (req: Request, res: Response): void => {
@@ -14,10 +14,10 @@ export class WebhookController {
     const challenge = req.query['hub.challenge'];
 
     if (mode === 'subscribe' && token === config.WA_WEBHOOK_TOKEN) {
-      logger.info('Webhook verified');
+      logger.info('WhatsApp webhook verified');
       res.status(200).send(challenge);
     } else {
-      logger.warn('Webhook verification failed');
+      logger.warn('WhatsApp webhook verification failed');
       res.status(403).send('Forbidden');
     }
   };
@@ -29,11 +29,11 @@ export class WebhookController {
 
       setImmediate(() => {
         this.processPayload(req.body as WhatsAppWebhookPayload).catch(error => {
-          logger.error('Webhook processing error:', error);
+          logger.error('WhatsApp webhook processing error:', error);
         });
       });
     } catch (error) {
-      logger.error('Webhook error:', error);
+      logger.error('WhatsApp webhook error:', error);
       if (!res.headersSent) {
         res.status(500).json({ error: 'Internal server error' });
       }
@@ -66,7 +66,7 @@ export class WebhookController {
       const contactName = contacts?.find(c => c.wa_id === message.from)?.profile?.name;
       const content = message.text?.body || '';
 
-      logger.info(`Message from ${contactName || message.from}: ${content}`);
+      logger.info(`[WhatsApp] Message from ${contactName || message.from}: ${content}`);
 
       await this.eventBus.publish(
         new MessageReceivedEvent({
@@ -93,3 +93,4 @@ export class WebhookController {
     }
   };
 }
+

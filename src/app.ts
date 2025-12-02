@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 
-import { WebhookController } from '@/api/controllers';
+import { WhatsAppWebhookController, TelegramWebhookController } from '@/api/controllers';
 import { ProcessMessageHandler } from '@/business/handlers';
 import { InMemoryEventBus } from '@/infrastructure/events';
 import { IEventBus, IMessagingService, IAIAgent } from '@/core/interfaces';
@@ -13,7 +13,8 @@ import { CliManager } from '@/utils/cli-manager';
 
 class Application {
   public app: express.Application;
-  private webhookController: WebhookController;
+  private whatsappWebhookController: WhatsAppWebhookController;
+  private telegramWebhookController: TelegramWebhookController;
   private eventBus: IEventBus;
   private messagingAdapter: IMessagingService;
   private agentAdapter: IAIAgent;
@@ -45,7 +46,8 @@ class Application {
     new ProcessMessageHandler(this.eventBus, this.messagingAdapter, this.agentAdapter);
 
     // Create controllers (publish events)
-    this.webhookController = new WebhookController(this.eventBus);
+    this.whatsappWebhookController = new WhatsAppWebhookController(this.eventBus);
+    this.telegramWebhookController = new TelegramWebhookController(this.eventBus);
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -68,7 +70,7 @@ class Application {
   }
 
   private initializeRoutes(): void {
-    this.app.get('/health', this.webhookController.healthCheck);
+    this.app.get('/health', this.whatsappWebhookController.healthCheck);
 
     this.app.get('/', (_req, res) => {
       res.json({
@@ -78,8 +80,12 @@ class Application {
       });
     });
 
-    this.app.get('/webhook', this.webhookController.handleVerification);
-    this.app.post('/webhook', this.webhookController.handleWebhook);
+    // WhatsApp webhook routes
+    this.app.get('/webhook/whatsapp', this.whatsappWebhookController.handleVerification);
+    this.app.post('/webhook/whatsapp', this.whatsappWebhookController.handleWebhook);
+
+    // Telegram webhook routes
+    this.app.post('/webhook/telegram', this.telegramWebhookController.handleWebhook);
 
     this.app.use('*', (req, res) => {
       res.status(404).json({
@@ -123,7 +129,8 @@ class Application {
 
     this.app.listen(port, host, () => {
       logger.info(`Messaging Gateway running on ${host}:${port}`);
-      logger.info(`Webhook URL: http://${host}:${port}/webhook`);
+      logger.info(`WhatsApp Webhook: http://${host}:${port}/webhook/whatsapp`);
+      logger.info(`Telegram Webhook: http://${host}:${port}/webhook/telegram`);
       logger.info(`Health check: http://${host}:${port}/health`);
       logger.info(`Environment: ${config.NODE_ENV}`);
     });
