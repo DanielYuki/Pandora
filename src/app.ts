@@ -47,6 +47,11 @@ class Application {
     this.initializeErrorHandling();
   }
 
+  /**
+   * Initializes Express middleware for security, CORS, and request parsing.
+   * Sets up helmet for security headers, CORS for cross-origin requests,
+   * and JSON/URL-encoded body parsers with size limits.
+   */
   private initializeMiddleware(): void {
     this.app.use(helmet());
     this.app.use(
@@ -62,6 +67,11 @@ class Application {
     this.app.use(express.urlencoded({ extended: true, limit: '1mb' }));
   }
 
+  /**
+   * Initializes all HTTP routes for the application.
+   * Sets up health check, root endpoint, platform-specific webhooks,
+   * and a catch-all 404 handler.
+   */
   private initializeRoutes(): void {
     this.app.get('/health', this.healthCheck);
 
@@ -84,6 +94,9 @@ class Application {
     });
   }
 
+  /**
+   * Dynamically sets up webhook routes based on the configured messaging adapter.
+   */
   private setupWebhooks(): void {
     if (this.messagingAdapter instanceof WhatsAppAdapter) {
       const controller = new WhatsAppWebhookController(this.eventBus);
@@ -98,6 +111,9 @@ class Application {
     // CliAdapter doesn't need webhook routes
   }
 
+  /**
+   * Health check :)
+   */
   private healthCheck = async (_req: Request, res: Response): Promise<void> => {
     try {
       res.status(200).json({
@@ -112,11 +128,18 @@ class Application {
     }
   };
 
+  /**
+   * Initializes error handling for the application.
+   * Sets up Express error middleware for handling HTTP errors,
+   * and process-level handlers for uncaught exceptions, unhandled rejections,
+   * and graceful shutdown signals (SIGTERM, SIGINT).
+   */
   private initializeErrorHandling(): void {
     this.app.use(
       (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
         logger.error('Unhandled error:', err);
 
+        // ? Might configure for dev ONLY...
         const isDevelopment = config.NODE_ENV === 'development';
 
         res.status(err.statusCode || 500).json({
@@ -141,6 +164,7 @@ class Application {
   }
 
   public async start(): Promise<void> {
+    // TODO: fix hostname
     const port = config.PORT;
     const host = '0.0.0.0';
 
@@ -159,6 +183,13 @@ class Application {
     }
   }
 
+  /**
+   * Handles graceful shutdown when receiving termination signals.
+   * Logs the shutdown event and exits the process cleanly.
+   * Called on SIGTERM and SIGINT signals.
+   *
+   * @param signal - The termination signal received (SIGTERM or SIGINT)
+   */
   private gracefulShutdown(signal: string): void {
     logger.info(`Received ${signal}. Shutting down...`);
     process.exit(0);

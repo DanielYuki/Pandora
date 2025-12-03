@@ -1,5 +1,9 @@
 // WhatsApp-specific Webhook Types
 
+/**
+ * WhatsApp Webhook Message object
+ * Represents a single message received from WhatsApp
+ */
 export interface WhatsAppWebhookMessage {
   id: string;
   from: string;
@@ -9,6 +13,10 @@ export interface WhatsAppWebhookMessage {
   text?: { body: string };
 }
 
+/**
+ * WhatsApp Webhook Payload object
+ * This is the top-level object sent by WhatsApp Cloud API to your webhook
+ */
 export interface WhatsAppWebhookPayload {
   object: string;
   entry: Array<{

@@ -4,12 +4,18 @@ import axios, { AxiosInstance } from 'axios';
 import config from '@/utils/config';
 import logger from '@/utils/logger';
 
+/**
+ * WhatsApp adapter for sending messages via WhatsApp Cloud API.
+ * Implements IMessagingService interface for Clean Architecture compliance.
+ */
 export class WhatsAppAdapter implements IMessagingService {
   private client: AxiosInstance;
 
   constructor() {
     if (!config.WA_PHONE_NUMBER_ID || !config.CLOUD_API_ACCESS_TOKEN) {
-      throw new Error('WhatsApp configuration missing: WA_PHONE_NUMBER_ID and CLOUD_API_ACCESS_TOKEN are required');
+      throw new Error(
+        'WhatsApp configuration missing: WA_PHONE_NUMBER_ID and CLOUD_API_ACCESS_TOKEN are required'
+      );
     }
 
     this.client = axios.create({

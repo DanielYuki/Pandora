@@ -5,6 +5,10 @@ import { MessageReceivedEvent } from '@/core/events/message-received.event';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 
+/**
+ * WhatsApp webhook controller for handling incoming WhatsApp updates.
+ * Receives webhook requests, validates them, and publishes domain events.
+ */
 export class WhatsAppWebhookController {
   constructor(private eventBus: IEventBus) {}
 
@@ -24,9 +28,10 @@ export class WhatsAppWebhookController {
 
   handleWebhook = async (req: Request, res: Response): Promise<void> => {
     try {
-      // Acknowledge immediately
+      // Acknowledge immediately (WhatsApp expects quick response)
       res.status(200).send('OK');
 
+      // Process payload asynchronously
       setImmediate(() => {
         this.processPayload(req.body as WhatsAppWebhookPayload).catch(error => {
           logger.error('WhatsApp webhook processing error:', error);
@@ -93,4 +98,3 @@ export class WhatsAppWebhookController {
     }
   };
 }
-
