@@ -18,6 +18,12 @@ const envSchema = z.object({
   // AI Agent Configuration
   AGENT_SERVER_ADDRESS: z.string().default('localhost:50051'),
   OPENAI_API_KEY: z.string().optional(),
+  AI_AGENT_HTTP_ENDPOINT: z.string().optional(),
+  AI_AGENT_GRAPHQL_ENDPOINT: z.string().optional(),
+
+  // Adapter Configuration
+  MESSAGING_PLATFORM: z.enum(['whatsapp', 'telegram', 'cli']).default('cli'),
+  AI_AGENT_TYPE: z.enum(['openai', 'grpc', 'http', 'graphql', 'mock', 'oz']).default('mock'),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('debug'),

@@ -5,7 +5,8 @@ import { WhatsAppWebhookController, TelegramWebhookController } from '@/api/cont
 import { ProcessMessageHandler } from '@/business/handlers';
 import { InMemoryEventBus } from '@/infrastructure/events';
 import { IEventBus, IMessagingService, IAIAgent } from '@/core/interfaces';
-import { WhatsAppAdapter, CliAdapter, OpenAIAgentAdapter, TelegramAdapter } from '@/infrastructure';
+import { AdapterFactory } from '@/infrastructure/factories';
+import { WhatsAppAdapter, CliAdapter, TelegramAdapter } from '@/infrastructure';
 import logger from '@/utils/logger';
 import config from '@/utils/config';
 import { CliManager } from '@/utils/cli-manager';
@@ -25,17 +26,19 @@ class Application {
 
     // ============================================================
     // ! ADAPTERS CONFIGURATION
-    // Change these to use different messaging platforms or AI agents
+    // Configure adapters via environment variables:
+    // - MESSAGING_PLATFORM: 'whatsapp' | 'telegram' | 'cli'
+    // - AI_AGENT_TYPE: 'openai' | 'grpc' | 'http' | 'graphql' | 'mock' | 'oz'
     // ============================================================
     logger.info('📦 Adapters Configuration');
 
-    // Messaging adapter: WhatsAppAdapter, TelegramAdapter, CliAdapter
-    this.messagingAdapter = new TelegramAdapter(); // ? WHATSAPP, TELEGRAM, OR CLI ADAPTER
-    logger.info(`Messaging adapter: ${this.messagingAdapter.constructor.name}`);
+    // Create messaging adapter from configuration
+    this.messagingAdapter = AdapterFactory.createMessagingAdapter(config.MESSAGING_PLATFORM);
+    logger.info(`Messaging platform: ${config.MESSAGING_PLATFORM} (${this.messagingAdapter.constructor.name})`);
 
-    // AI Agent adapter: OpenAIAgentAdapter, GrpcAgentAdapter, HttpAgentAdapter, MockAgentAdapter
-    this.agentAdapter = new OpenAIAgentAdapter(); // ? OPENAI, GRPC, HTTP, MOCK AGENT ADAPTER
-    logger.info(`Agent adapter: ${this.agentAdapter.constructor.name}`);
+    // Create AI agent adapter from configuration
+    this.agentAdapter = AdapterFactory.createAIAgentAdapter(config.AI_AGENT_TYPE);
+    logger.info(`AI agent type: ${config.AI_AGENT_TYPE} (${this.agentAdapter.constructor.name})`);
 
     // ============================================================
 
