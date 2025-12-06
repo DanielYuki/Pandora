@@ -1,9 +1,13 @@
-import { Request, Response } from 'express';
-import { WhatsAppWebhookPayload } from '@/types/whatsapp.types';
-import { IEventBus } from '@/core/interfaces/event-bus.interface';
+import type { Request, Response } from 'express';
 import { MessageReceivedEvent } from '@/core/events/message-received.event';
-import logger from '@/utils/logger';
+import type { IEventBus } from '@/core/interfaces/event-bus.interface';
+import type {
+  WhatsAppWebhookContact,
+  WhatsAppWebhookMessage,
+  WhatsAppWebhookPayload,
+} from '@/types/whatsapp.types';
 import config from '@/utils/config';
+import logger from '@/utils/logger';
 
 /**
  * WhatsApp webhook controller for handling incoming WhatsApp updates.
@@ -33,12 +37,18 @@ export class WhatsAppWebhookController {
 
       // Process payload asynchronously
       setImmediate(() => {
-        this.processPayload(req.body as WhatsAppWebhookPayload).catch(error => {
-          logger.error('WhatsApp webhook processing error:', error);
+        this.processPayload(req.body as WhatsAppWebhookPayload).catch((error: unknown) => {
+          logger.error(
+            'WhatsApp webhook processing error:',
+            error instanceof Error ? error.message : 'An error occurred'
+          );
         });
       });
-    } catch (error) {
-      logger.error('WhatsApp webhook error:', error);
+    } catch (error: unknown) {
+      logger.error(
+        'WhatsApp webhook error:',
+        error instanceof Error ? error.message : 'An error occurred'
+      );
       if (!res.headersSent) {
         res.status(500).json({ error: 'Internal server error' });
       }
@@ -60,7 +70,10 @@ export class WhatsAppWebhookController {
     }
   }
 
-  private async publishMessageEvents(messages: any[], contacts: any[]): Promise<void> {
+  private async publishMessageEvents(
+    messages: WhatsAppWebhookMessage[],
+    contacts: WhatsAppWebhookContact[]
+  ): Promise<void> {
     for (const message of messages) {
       // Only process text messages
       if (message.type !== 'text') {
@@ -92,8 +105,11 @@ export class WhatsAppWebhookController {
         timestamp: new Date().toISOString(),
         service: 'messaging-gateway',
       });
-    } catch (error) {
-      logger.error('Health check failed:', error);
+    } catch (error: unknown) {
+      logger.error(
+        'Health check failed:',
+        error instanceof Error ? error.message : 'An error occurred'
+      );
       res.status(503).json({ status: 'unhealthy' });
     }
   };

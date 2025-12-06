@@ -79,11 +79,11 @@ async function setupTelegramWebhook() {
       logger.error(`❌ Failed to set Telegram webhook: ${response.data.description}`);
       process.exit(1);
     }
-  } catch (error: any) {
-    logger.error('❌ Error setting Telegram webhook:', error.message);
-    if (error.response?.data) {
-      logger.error('   Response:', JSON.stringify(error.response.data, null, 2));
-    }
+  } catch (error: unknown) {
+    logger.error(
+      '❌ Error setting Telegram webhook:',
+      error instanceof Error ? error.message : 'An error occurred'
+    );
     process.exit(1);
   }
 }

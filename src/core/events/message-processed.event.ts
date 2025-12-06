@@ -1,5 +1,5 @@
-import { DomainEvent } from '@/core/interfaces/event-bus.interface';
-import { ProcessedMessage } from '@/core/entities';
+import type { ProcessedMessage } from '@/core/entities';
+import type { DomainEvent } from '@/core/interfaces/event-bus.interface';
 
 export class MessageProcessedEvent implements DomainEvent {
   readonly type = 'message.processed';

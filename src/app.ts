@@ -1,15 +1,15 @@
-import express, { Request, Response } from 'express';
 import cors from 'cors';
+import express, { type Request, type Response } from 'express';
 import helmet from 'helmet';
-import { WhatsAppWebhookController, TelegramWebhookController } from '@/api/controllers';
+import { TelegramWebhookController, WhatsAppWebhookController } from '@/api/controllers';
 import { ProcessMessageHandler } from '@/business/handlers';
+import type { IAIAgent, IEventBus, IMessagingService } from '@/core/interfaces';
+import { CliAdapter, TelegramAdapter, WhatsAppAdapter } from '@/infrastructure';
 import { InMemoryEventBus } from '@/infrastructure/events';
-import { IEventBus, IMessagingService, IAIAgent } from '@/core/interfaces';
-import { AdapterFactory } from '@/infrastructure/factories';
-import { WhatsAppAdapter, CliAdapter, TelegramAdapter } from '@/infrastructure';
-import logger from '@/utils/logger';
-import config from '@/utils/config';
+import { createAIAgentAdapter, createMessagingAdapter } from '@/infrastructure/factories';
 import { CliManager } from '@/utils/cli-manager';
+import config from '@/utils/config';
+import logger from '@/utils/logger';
 
 class Application {
   public app: express.Application;
@@ -33,11 +33,11 @@ class Application {
     logger.info('📦 Adapters Configuration');
 
     // Create messaging adapter from configuration
-    this.messagingAdapter = AdapterFactory.createMessagingAdapter(config.MESSAGING_ADAPTER);
+    this.messagingAdapter = createMessagingAdapter(config.MESSAGING_ADAPTER);
     logger.info(`Messaging adapter: ${this.messagingAdapter.constructor.name}`);
 
     // Create agent adapter from configuration
-    this.agentAdapter = AdapterFactory.createAIAgentAdapter(config.AGENT_ADAPTER);
+    this.agentAdapter = createAIAgentAdapter(config.AGENT_ADAPTER);
     logger.info(`Agent adapter: ${this.agentAdapter.constructor.name}`);
 
     // ============================================================
@@ -137,17 +137,22 @@ class Application {
    * and process-level handlers for uncaught exceptions, unhandled rejections,
    * and graceful shutdown signals (SIGTERM, SIGINT).
    */
+  // TODO: Refactor this to be more robust and reusable.
   private initializeErrorHandling(): void {
     this.app.use(
-      (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-        logger.error('Unhandled error:', err);
+      (err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+        logger.error('Unhandled error:', err instanceof Error ? err.message : 'An error occurred');
 
         // ? Might configure for dev ONLY...
         const isDevelopment = config.NODE_ENV === 'development';
 
-        res.status(err.statusCode || 500).json({
-          error: isDevelopment ? err.message : 'Internal Server Error',
-          ...(isDevelopment && { stack: err.stack }),
+        res.status(500).json({
+          error: isDevelopment
+            ? err instanceof Error
+              ? err.message
+              : 'An error occurred'
+            : 'Internal Server Error',
+          ...(isDevelopment && { stack: err instanceof Error ? err.stack : undefined }),
         });
       }
     );

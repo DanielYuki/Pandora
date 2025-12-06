@@ -1,5 +1,5 @@
-import { DomainEvent } from '@/core/interfaces/event-bus.interface';
-import { IncomingMessage } from '@/core/entities';
+import type { IncomingMessage } from '@/core/entities';
+import type { DomainEvent } from '@/core/interfaces/event-bus.interface';
 
 export class MessageReceivedEvent implements DomainEvent {
   readonly type = 'message.received';

@@ -1,5 +1,5 @@
-import { DomainEvent } from '@/core/interfaces/event-bus.interface';
-import { FailedMessage } from '@/core/entities';
+import type { FailedMessage } from '@/core/entities';
+import type { DomainEvent } from '@/core/interfaces/event-bus.interface';
 
 export class MessageFailedEvent implements DomainEvent {
   readonly type = 'message.failed';

@@ -1,4 +1,4 @@
-import { IEventBus, DomainEvent, EventHandler } from '@/core/interfaces/event-bus.interface';
+import type { DomainEvent, EventHandler, IEventBus } from '@/core/interfaces';
 import logger from '@/utils/logger';
 
 export class InMemoryEventBus implements IEventBus {
@@ -30,7 +30,7 @@ export class InMemoryEventBus implements IEventBus {
       this.handlers.set(eventType, new Set());
     }
 
-    this.handlers.get(eventType)!.add(handler);
+    this.handlers.get(eventType)?.add(handler);
     logger.debug(`Subscribed to event: ${eventType}`);
   }
 
@@ -41,4 +41,3 @@ export class InMemoryEventBus implements IEventBus {
     }
   }
 }
-

@@ -1,5 +1,5 @@
-import { IAIAgent, AgentRequest, AgentResponse } from '@/core/interfaces/ai-agent.interface';
-import * as readline from 'readline';
+import * as readline from 'node:readline';
+import type { AgentRequest, AgentResponse, IAIAgent } from '@/core/interfaces/ai-agent.interface';
 import logger from '@/utils/logger';
 
 /**
@@ -39,11 +39,11 @@ export class OzAgentAdapter implements IAIAgent {
         success: true,
         answer,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Oz Agent error:', error);
       item.resolve({
         success: false,
-        errorMessage: error.message || 'An error occurred',
+        errorMessage: error instanceof Error ? error.message : 'An error occurred',
       });
     } finally {
       this.isProcessing = false;
@@ -62,7 +62,8 @@ export class OzAgentAdapter implements IAIAgent {
         output: process.stdout,
       });
 
-      console.log('\n' + '='.repeat(50));
+      console.log('\n');
+      console.log('='.repeat(50));
       console.log(`User Input (${request.id}):`);
       console.log(`"${request.input}"`);
       console.log('='.repeat(50));
