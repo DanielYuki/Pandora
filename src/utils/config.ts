@@ -7,7 +7,6 @@ const envSchema = z.object({
 
   // WhatsApp Configuration
   CLOUD_API_ACCESS_TOKEN: z.string().optional(),
-  CLOUD_API_VERSION: z.string().default('v19.0'),
   WA_PHONE_NUMBER_ID: z.string().optional(),
   WA_WEBHOOK_TOKEN: z.string().optional(),
 

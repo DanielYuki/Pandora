@@ -9,6 +9,7 @@ export class GrpcAgentAdapter implements IAIAgent {
     this.client = new InferenceClient(config.AGENT_SERVER_ADDRESS);
   }
 
+  // TODO: Update grpc setup and simplify it for template
   async infer(request: AgentRequest): Promise<AgentResponse> {
     try {
       const response = await this.client.infer({

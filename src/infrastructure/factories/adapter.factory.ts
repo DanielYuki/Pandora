@@ -1,19 +1,12 @@
 import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
 import { IAIAgent } from '@/core/interfaces/ai-agent.interface';
-import {
-  WhatsAppAdapter,
-  TelegramAdapter,
-  CliAdapter,
-} from '@/infrastructure/messaging';
+import { WhatsAppAdapter, TelegramAdapter, CliAdapter } from '@/infrastructure/messaging';
 import {
   OpenAIAgentAdapter,
   GrpcAgentAdapter,
-  HttpAgentAdapter,
-  GraphQLAgentAdapter,
   MockAgentAdapter,
   OzAgentAdapter,
 } from '@/infrastructure/ai-agents';
-import config from '@/utils/config';
 
 /**
  * Factory for creating messaging and AI agent adapters based on configuration.
@@ -53,20 +46,6 @@ export class AdapterFactory {
         return new OpenAIAgentAdapter();
       case 'grpc':
         return new GrpcAgentAdapter();
-      case 'http':
-        if (!config.AI_AGENT_HTTP_ENDPOINT) {
-          throw new Error(
-            'AI_AGENT_HTTP_ENDPOINT is required when using HTTP agent adapter'
-          );
-        }
-        return new HttpAgentAdapter(config.AI_AGENT_HTTP_ENDPOINT);
-      case 'graphql':
-        if (!config.AI_AGENT_GRAPHQL_ENDPOINT) {
-          throw new Error(
-            'AI_AGENT_GRAPHQL_ENDPOINT is required when using GraphQL agent adapter'
-          );
-        }
-        return new GraphQLAgentAdapter(config.AI_AGENT_GRAPHQL_ENDPOINT);
       case 'mock':
         return new MockAgentAdapter();
       case 'oz':
@@ -78,4 +57,3 @@ export class AdapterFactory {
     }
   }
 }
-

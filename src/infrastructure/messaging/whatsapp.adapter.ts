@@ -19,7 +19,7 @@ export class WhatsAppAdapter implements IMessagingService {
     }
 
     this.client = axios.create({
-      baseURL: `https://graph.facebook.com/${config.CLOUD_API_VERSION}/${config.WA_PHONE_NUMBER_ID}`,
+      baseURL: `https://graph.facebook.com/v22.0/${config.WA_PHONE_NUMBER_ID}`,
       headers: {
         Authorization: `Bearer ${config.CLOUD_API_ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
