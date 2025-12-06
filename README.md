@@ -24,6 +24,7 @@ An **event-driven messaging gateway** built with clean architecture principles. 
 - **Plug & Play Adapters**: Swap messaging platforms and AI agents by changing one line
 - **Multiple AI Backends**: Support for OpenAI, gRPC, HTTP REST, and GraphQL agents
 - **CLI Mode**: Interactive terminal interface for testing and development
+- **Code Quality**: Biome for formatting/linting and TypeScript for type safety
 
 ## 🏗️ Architecture
 
@@ -186,7 +187,6 @@ LOG_LEVEL=info
 
 # WhatsApp (if using WhatsAppAdapter)
 CLOUD_API_ACCESS_TOKEN=your_whatsapp_token
-CLOUD_API_VERSION=v19.0
 WA_PHONE_NUMBER_ID=your_phone_number_id
 WA_WEBHOOK_TOKEN=your_webhook_secret
 
@@ -205,6 +205,37 @@ pnpm run dev
 # Production
 pnpm run build && pnpm start
 ```
+
+## 🔧 Code Quality
+
+This project uses **Biome** for formatting and linting, and **TypeScript** for type checking.
+
+### Available Scripts
+
+```bash
+# Check code quality (formatting + linting)
+pnpm run biome:check
+
+# Auto-fix formatting and linting issues
+pnpm run biome:fix
+
+# Type checking only (no compilation)
+pnpm run type-check
+```
+
+### What Gets Checked
+
+- **Formatting**: Code style, indentation, spacing, import sorting
+- **Linting**: Code quality, unused variables, suspicious patterns
+- **Type Safety**: TypeScript type checking
+
+### Ignored Files
+
+The following are automatically ignored:
+- `dist/` - Build output
+- `src/lib/generated/` - Generated protocol buffer code
+- `node_modules/` - Dependencies
+- Various OS and IDE files (see `biome.json` for full list)
 
 ## 🤖 AI Agent Interface
 
@@ -230,8 +261,6 @@ export interface AgentResponse {
 **Available AI Agent Adapters:**
 - `OpenAIAgentAdapter` - Direct OpenAI API integration
 - `GrpcAgentAdapter` - gRPC-based agent server
-- `HttpAgentAdapter` - HTTP REST API agent
-- `GraphqlAgentAdapter` - GraphQL-based agent
 - `MockAgentAdapter` - Mock agent for testing
 
 ## 📊 Environment Variables
@@ -239,7 +268,6 @@ export interface AgentResponse {
 | Variable | Description | Required | Used By |
 |----------|-------------|----------|---------|
 | `CLOUD_API_ACCESS_TOKEN` | WhatsApp API token | ✅* | WhatsAppAdapter |
-| `CLOUD_API_VERSION` | WhatsApp API version | ✅* | WhatsAppAdapter |
 | `WA_PHONE_NUMBER_ID` | WhatsApp phone number ID | ✅* | WhatsAppAdapter |
 | `WA_WEBHOOK_TOKEN` | Webhook verification token | ✅* | WebhookController |
 | `OPENAI_API_KEY` | OpenAI API key | ✅* | OpenAIAgentAdapter |
