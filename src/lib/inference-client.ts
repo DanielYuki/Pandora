@@ -1,5 +1,9 @@
 import * as grpc from '@grpc/grpc-js';
-import { InferenceRequest, InferenceResponse, InferenceServiceClient } from './generated/inference';
+import {
+  type InferenceRequest,
+  type InferenceResponse,
+  InferenceServiceClient,
+} from './generated/inference';
 
 export class InferenceClient {
   private client: InferenceServiceClient;

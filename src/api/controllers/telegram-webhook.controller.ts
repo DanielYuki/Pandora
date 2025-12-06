@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import { TelegramUpdate } from '@/types/telegram.types';
-import { IEventBus } from '@/core/interfaces/event-bus.interface';
+import type { Request, Response } from 'express';
 import { MessageReceivedEvent } from '@/core/events/message-received.event';
-import logger from '@/utils/logger';
+import type { IEventBus } from '@/core/interfaces/event-bus.interface';
+import type { TelegramUpdate } from '@/types/telegram.types';
 import config from '@/utils/config';
+import logger from '@/utils/logger';
 
 /**
  * Telegram webhook controller for handling incoming Telegram updates.

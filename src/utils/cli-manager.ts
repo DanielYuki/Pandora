@@ -1,6 +1,6 @@
-import * as readline from 'readline';
-import { IEventBus } from '@/core/interfaces';
+import * as readline from 'node:readline';
 import { MessageReceivedEvent } from '@/core/events';
+import type { IEventBus } from '@/core/interfaces';
 import logger from '@/utils/logger';
 
 // TODO: Add logger level option & more options

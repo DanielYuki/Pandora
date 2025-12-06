@@ -12,4 +12,3 @@ export interface IEventBus {
   subscribe(eventType: string, handler: EventHandler): void;
   unsubscribe(eventType: string, handler: EventHandler): void;
 }
-

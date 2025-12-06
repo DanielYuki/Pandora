@@ -5,7 +5,7 @@
 // source: inference.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from '@bufbuild/protobuf/wire';
 import {
   type CallOptions,
   type ChannelCredentials,
@@ -17,9 +17,9 @@ import {
   type Metadata,
   type ServiceError,
   type UntypedServiceImplementation,
-} from "@grpc/grpc-js";
+} from '@grpc/grpc-js';
 
-export const protobufPackage = "inference";
+export const protobufPackage = 'inference';
 
 export interface InferenceRequest {
   userId: string;
@@ -36,21 +36,21 @@ export interface InferenceResponse {
 }
 
 function createBaseInferenceRequest(): InferenceRequest {
-  return { userId: "", userEmail: "", userName: "", userInput: "" };
+  return { userId: '', userEmail: '', userName: '', userInput: '' };
 }
 
 export const InferenceRequest: MessageFns<InferenceRequest> = {
   encode(message: InferenceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.userId !== "") {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
-    if (message.userEmail !== "") {
+    if (message.userEmail !== '') {
       writer.uint32(18).string(message.userEmail);
     }
-    if (message.userName !== "") {
+    if (message.userName !== '') {
       writer.uint32(26).string(message.userName);
     }
-    if (message.userInput !== "") {
+    if (message.userInput !== '') {
       writer.uint32(34).string(message.userInput);
     }
     return writer;
@@ -106,25 +106,25 @@ export const InferenceRequest: MessageFns<InferenceRequest> = {
 
   fromJSON(object: any): InferenceRequest {
     return {
-      userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
-      userEmail: isSet(object.userEmail) ? globalThis.String(object.userEmail) : "",
-      userName: isSet(object.userName) ? globalThis.String(object.userName) : "",
-      userInput: isSet(object.userInput) ? globalThis.String(object.userInput) : "",
+      userId: isSet(object.userId) ? globalThis.String(object.userId) : '',
+      userEmail: isSet(object.userEmail) ? globalThis.String(object.userEmail) : '',
+      userName: isSet(object.userName) ? globalThis.String(object.userName) : '',
+      userInput: isSet(object.userInput) ? globalThis.String(object.userInput) : '',
     };
   },
 
   toJSON(message: InferenceRequest): unknown {
     const obj: any = {};
-    if (message.userId !== "") {
+    if (message.userId !== '') {
       obj.userId = message.userId;
     }
-    if (message.userEmail !== "") {
+    if (message.userEmail !== '') {
       obj.userEmail = message.userEmail;
     }
-    if (message.userName !== "") {
+    if (message.userName !== '') {
       obj.userName = message.userName;
     }
-    if (message.userInput !== "") {
+    if (message.userInput !== '') {
       obj.userInput = message.userInput;
     }
     return obj;
@@ -135,27 +135,27 @@ export const InferenceRequest: MessageFns<InferenceRequest> = {
   },
   fromPartial<I extends Exact<DeepPartial<InferenceRequest>, I>>(object: I): InferenceRequest {
     const message = createBaseInferenceRequest();
-    message.userId = object.userId ?? "";
-    message.userEmail = object.userEmail ?? "";
-    message.userName = object.userName ?? "";
-    message.userInput = object.userInput ?? "";
+    message.userId = object.userId ?? '';
+    message.userEmail = object.userEmail ?? '';
+    message.userName = object.userName ?? '';
+    message.userInput = object.userInput ?? '';
     return message;
   },
 };
 
 function createBaseInferenceResponse(): InferenceResponse {
-  return { answer: "", success: false, errorMessage: "", timestamp: 0 };
+  return { answer: '', success: false, errorMessage: '', timestamp: 0 };
 }
 
 export const InferenceResponse: MessageFns<InferenceResponse> = {
   encode(message: InferenceResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.answer !== "") {
+    if (message.answer !== '') {
       writer.uint32(10).string(message.answer);
     }
     if (message.success !== false) {
       writer.uint32(16).bool(message.success);
     }
-    if (message.errorMessage !== "") {
+    if (message.errorMessage !== '') {
       writer.uint32(26).string(message.errorMessage);
     }
     if (message.timestamp !== 0) {
@@ -214,22 +214,22 @@ export const InferenceResponse: MessageFns<InferenceResponse> = {
 
   fromJSON(object: any): InferenceResponse {
     return {
-      answer: isSet(object.answer) ? globalThis.String(object.answer) : "",
+      answer: isSet(object.answer) ? globalThis.String(object.answer) : '',
       success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
-      errorMessage: isSet(object.errorMessage) ? globalThis.String(object.errorMessage) : "",
+      errorMessage: isSet(object.errorMessage) ? globalThis.String(object.errorMessage) : '',
       timestamp: isSet(object.timestamp) ? globalThis.Number(object.timestamp) : 0,
     };
   },
 
   toJSON(message: InferenceResponse): unknown {
     const obj: any = {};
-    if (message.answer !== "") {
+    if (message.answer !== '') {
       obj.answer = message.answer;
     }
     if (message.success !== false) {
       obj.success = message.success;
     }
-    if (message.errorMessage !== "") {
+    if (message.errorMessage !== '') {
       obj.errorMessage = message.errorMessage;
     }
     if (message.timestamp !== 0) {
@@ -243,9 +243,9 @@ export const InferenceResponse: MessageFns<InferenceResponse> = {
   },
   fromPartial<I extends Exact<DeepPartial<InferenceResponse>, I>>(object: I): InferenceResponse {
     const message = createBaseInferenceResponse();
-    message.answer = object.answer ?? "";
+    message.answer = object.answer ?? '';
     message.success = object.success ?? false;
-    message.errorMessage = object.errorMessage ?? "";
+    message.errorMessage = object.errorMessage ?? '';
     message.timestamp = object.timestamp ?? 0;
     return message;
   },
@@ -254,12 +254,14 @@ export const InferenceResponse: MessageFns<InferenceResponse> = {
 export type InferenceServiceService = typeof InferenceServiceService;
 export const InferenceServiceService = {
   infer: {
-    path: "/inference.InferenceService/Infer",
+    path: '/inference.InferenceService/Infer',
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: InferenceRequest): Buffer => Buffer.from(InferenceRequest.encode(value).finish()),
+    requestSerialize: (value: InferenceRequest): Buffer =>
+      Buffer.from(InferenceRequest.encode(value).finish()),
     requestDeserialize: (value: Buffer): InferenceRequest => InferenceRequest.decode(value),
-    responseSerialize: (value: InferenceResponse): Buffer => Buffer.from(InferenceResponse.encode(value).finish()),
+    responseSerialize: (value: InferenceResponse): Buffer =>
+      Buffer.from(InferenceResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): InferenceResponse => InferenceResponse.decode(value),
   },
 } as const;
@@ -271,49 +273,58 @@ export interface InferenceServiceServer extends UntypedServiceImplementation {
 export interface InferenceServiceClient extends Client {
   infer(
     request: InferenceRequest,
-    callback: (error: ServiceError | null, response: InferenceResponse) => void,
+    callback: (error: ServiceError | null, response: InferenceResponse) => void
   ): ClientUnaryCall;
   infer(
     request: InferenceRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: InferenceResponse) => void,
+    callback: (error: ServiceError | null, response: InferenceResponse) => void
   ): ClientUnaryCall;
   infer(
     request: InferenceRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: InferenceResponse) => void,
+    callback: (error: ServiceError | null, response: InferenceResponse) => void
   ): ClientUnaryCall;
 }
 
 export const InferenceServiceClient = makeGenericClientConstructor(
   InferenceServiceService,
-  "inference.InferenceService",
+  'inference.InferenceService'
 ) as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): InferenceServiceClient;
+  new (
+    address: string,
+    credentials: ChannelCredentials,
+    options?: Partial<ClientOptions>
+  ): InferenceServiceClient;
   service: typeof InferenceServiceService;
   serviceName: string;
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(int64: { toString(): string }): number {
   const num = globalThis.Number(int64.toString());
   if (num > globalThis.Number.MAX_SAFE_INTEGER) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
   }
   if (num < globalThis.Number.MIN_SAFE_INTEGER) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
+    throw new globalThis.Error('Value is smaller than Number.MIN_SAFE_INTEGER');
   }
   return num;
 }

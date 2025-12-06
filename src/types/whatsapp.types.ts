@@ -14,6 +14,15 @@ export interface WhatsAppWebhookMessage {
 }
 
 /**
+ * WhatsApp Webhook Contact object
+ * Represents contact information in a webhook payload
+ */
+export interface WhatsAppWebhookContact {
+  profile: { name: string };
+  wa_id: string;
+}
+
+/**
  * WhatsApp Webhook Payload object
  * This is the top-level object sent by WhatsApp Cloud API to your webhook
  */
@@ -28,10 +37,7 @@ export interface WhatsAppWebhookPayload {
           display_phone_number: string;
           phone_number_id: string;
         };
-        contacts?: Array<{
-          profile: { name: string };
-          wa_id: string;
-        }>;
+        contacts?: WhatsAppWebhookContact[];
         messages?: WhatsAppWebhookMessage[];
       };
       field: string;

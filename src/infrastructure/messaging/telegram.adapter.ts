@@ -1,6 +1,6 @@
-import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
-import { MessageResult } from '@/core/entities';
-import axios, { AxiosInstance } from 'axios';
+import axios, { type AxiosInstance } from 'axios';
+import type { MessageResult } from '@/core/entities';
+import type { IMessagingService } from '@/core/interfaces/messaging-service.interface';
 import config from '@/utils/config';
 import logger from '@/utils/logger';
 
@@ -41,15 +41,15 @@ export class TelegramAdapter implements IMessagingService {
         success: true,
         messageId: response.data.result.message_id?.toString(),
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error(
         `Failed to send Telegram message to ${to}:`,
-        error.response?.data || error.message
+        error instanceof Error ? error.message : 'An error occurred'
       );
 
       return {
         success: false,
-        error: error.response?.data?.description || error.message,
+        error: error instanceof Error ? error.message : 'An error occurred',
       };
     }
   }

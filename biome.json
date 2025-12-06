@@ -1,103 +1,94 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
-	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-	"files": { "includes": ["**", "!!**/dist"] },
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": false,
-		"indentStyle": "space",
-		"indentWidth": 2,
-		"lineEnding": "lf",
-		"lineWidth": 100,
-		"attributePosition": "auto",
-		"bracketSameLine": false,
-		"bracketSpacing": true,
-		"expand": "auto",
-		"useEditorconfig": true,
-		"includes": [
-			"**",
-			"!**/node_modules/",
-			"!**/pnpm-lock.yaml",
-			"!**/package-lock.json",
-			"!**/dist/",
-			"!**/build/",
-			"!**/*.log",
-			"!**/logs/",
-			"!**/.env",
-			"!**/.env.local",
-			"!**/.env.production",
-			"!**/.env.test",
-			"!**/.DS_Store",
-			"!**/._*",
-			"!**/.Spotlight-V100",
-			"!**/.Trashes",
-			"!**/ehthumbs.db",
-			"!**/Thumbs.db",
-			"!**/.vscode/",
-			"!**/.idea/",
-			"!**/*.swp",
-			"!**/*.swo",
-			"!**/*.tsbuildinfo",
-			"!**/coverage/",
-			"!**/.nyc_output/",
-			"!**/*.tmp",
-			"!**/*.temp",
-			"!**/README.md",
-			"!**/CHANGELOG.md",
-			"!src/lib/generated/",
-			"!**/.proto"
-		]
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"suspicious": {
-				"noExplicitAny": "warn"
-			},
-			"correctness": {
-				"noUnusedVariables": "warn",
-				"noUnusedImports": "warn",
-				"noUndeclaredVariables": "error",
-				"noUnusedFunctionParameters": "warn"
-			},
-			"complexity": {
-				"noForEach": "off"
-			},
-			"style": {
-				"useConst": "warn"
-			}
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["src/lib/generated/**"],
-			"linter": {
-				"enabled": false
-			}
-		}
-	],
-	"javascript": {
-		"formatter": {
-			"jsxQuoteStyle": "double",
-			"quoteProperties": "asNeeded",
-			"trailingCommas": "es5",
-			"semicolons": "always",
-			"arrowParentheses": "asNeeded",
-			"bracketSameLine": false,
-			"quoteStyle": "single",
-			"attributePosition": "auto",
-			"bracketSpacing": true
-		}
-	},
-	"html": {
-		"formatter": {
-			"indentScriptAndStyle": false,
-			"selfCloseVoidElements": "always"
-		}
-	},
-	"assist": {
-		"enabled": true,
-		"actions": { "source": { "organizeImports": "on" } }
-	}
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": { "includes": ["**", "!!**/dist", "!!src/lib/generated"] },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**",
+      "!**/node_modules/",
+      "!**/pnpm-lock.yaml",
+      "!**/package-lock.json",
+      "!**/dist/",
+      "!**/build/",
+      "!**/*.log",
+      "!**/logs/",
+      "!**/.env",
+      "!**/.env.local",
+      "!**/.env.production",
+      "!**/.env.test",
+      "!**/.DS_Store",
+      "!**/._*",
+      "!**/.Spotlight-V100",
+      "!**/.Trashes",
+      "!**/ehthumbs.db",
+      "!**/Thumbs.db",
+      "!**/.vscode/",
+      "!**/.idea/",
+      "!**/*.swp",
+      "!**/*.swo",
+      "!**/*.tsbuildinfo",
+      "!**/coverage/",
+      "!**/.nyc_output/",
+      "!**/*.tmp",
+      "!**/*.temp",
+      "!**/README.md",
+      "!**/CHANGELOG.md",
+      "!**/.proto"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn",
+        "noUndeclaredVariables": "error",
+        "noUnusedFunctionParameters": "warn"
+      },
+      "complexity": {
+        "noForEach": "off"
+      },
+      "style": {
+        "useConst": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "asNeeded",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "html": {
+    "formatter": {
+      "indentScriptAndStyle": false,
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": { "source": { "organizeImports": "on" } }
+  }
 }

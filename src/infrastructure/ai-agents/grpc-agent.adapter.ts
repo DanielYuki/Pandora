@@ -1,4 +1,4 @@
-import { IAIAgent, AgentRequest, AgentResponse } from '@/core/interfaces/ai-agent.interface';
+import type { AgentRequest, AgentResponse, IAIAgent } from '@/core/interfaces/ai-agent.interface';
 import { InferenceClient } from '@/lib/inference-client';
 import config from '@/utils/config';
 
@@ -24,10 +24,10 @@ export class GrpcAgentAdapter implements IAIAgent {
         answer: response.answer,
         errorMessage: response.errorMessage,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        errorMessage: error.message || 'Unknown error during inference',
+        errorMessage: error instanceof Error ? error.message : 'An error occurred',
       };
     }
   }

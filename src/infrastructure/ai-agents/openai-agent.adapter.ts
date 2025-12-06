@@ -1,7 +1,7 @@
-import { IAIAgent, AgentRequest, AgentResponse } from '@/core/interfaces/ai-agent.interface';
 import OpenAI from 'openai';
-import logger from '@/utils/logger';
+import type { AgentRequest, AgentResponse, IAIAgent } from '@/core/interfaces/ai-agent.interface';
 import config from '@/utils/config';
+import logger from '@/utils/logger';
 
 export class OpenAIAgentAdapter implements IAIAgent {
   private client: OpenAI;
@@ -41,11 +41,14 @@ export class OpenAIAgentAdapter implements IAIAgent {
         success: true,
         answer,
       };
-    } catch (error: any) {
-      logger.error('OpenAI Agent error:', error.message);
+    } catch (error: unknown) {
+      logger.error(
+        'OpenAI Agent error:',
+        error instanceof Error ? error.message : 'An error occurred'
+      );
       return {
         success: false,
-        errorMessage: error.message || 'OpenAI request failed',
+        errorMessage: error instanceof Error ? error.message : 'An error occurred',
       };
     }
   }

@@ -1,6 +1,6 @@
-import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
-import { MessageResult } from '@/core/entities';
-import axios, { AxiosInstance } from 'axios';
+import axios, { type AxiosInstance } from 'axios';
+import type { MessageResult } from '@/core/entities';
+import type { IMessagingService } from '@/core/interfaces/messaging-service.interface';
 import config from '@/utils/config';
 import logger from '@/utils/logger';
 
@@ -45,12 +45,15 @@ export class WhatsAppAdapter implements IMessagingService {
         success: true,
         messageId: response.data.messages?.[0]?.id,
       };
-    } catch (error: any) {
-      logger.error(`Failed to send message to ${to}:`, error.response?.data || error.message);
+    } catch (error: unknown) {
+      logger.error(
+        `Failed to send message to ${to}:`,
+        error instanceof Error ? error.message : 'An error occurred'
+      );
 
       return {
         success: false,
-        error: error.response?.data?.error?.message || error.message,
+        error: error instanceof Error ? error.message : 'An error occurred',
       };
     }
   }

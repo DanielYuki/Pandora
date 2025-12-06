@@ -1,9 +1,9 @@
-import { IEventBus, DomainEvent } from '@/core/interfaces/event-bus.interface';
-import { IMessagingService } from '@/core/interfaces/messaging-service.interface';
-import { IAIAgent } from '@/core/interfaces/ai-agent.interface';
-import { MessageReceivedEvent } from '@/core/events/message-received.event';
-import { MessageProcessedEvent } from '@/core/events/message-processed.event';
 import { MessageFailedEvent } from '@/core/events/message-failed.event';
+import { MessageProcessedEvent } from '@/core/events/message-processed.event';
+import type { MessageReceivedEvent } from '@/core/events/message-received.event';
+import type { IAIAgent } from '@/core/interfaces/ai-agent.interface';
+import type { DomainEvent, IEventBus } from '@/core/interfaces/event-bus.interface';
+import type { IMessagingService } from '@/core/interfaces/messaging-service.interface';
 import logger from '@/utils/logger';
 
 export class ProcessMessageHandler {

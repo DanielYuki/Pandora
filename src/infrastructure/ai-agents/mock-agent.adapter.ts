@@ -1,4 +1,4 @@
-import { IAIAgent, AgentRequest, AgentResponse } from '@/core/interfaces/ai-agent.interface';
+import type { AgentRequest, AgentResponse, IAIAgent } from '@/core/interfaces/ai-agent.interface';
 import logger from '@/utils/logger';
 
 /**
