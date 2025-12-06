@@ -27,18 +27,18 @@ class Application {
     // ============================================================
     // ! ADAPTERS CONFIGURATION
     // Configure adapters via environment variables:
-    // - MESSAGING_PLATFORM: 'whatsapp' | 'telegram' | 'cli'
-    // - AI_AGENT_TYPE: 'openai' | 'grpc' | 'http' | 'graphql' | 'mock' | 'oz'
+    // - MESSAGING_ADAPTER: 'whatsapp' | 'telegram' | 'cli'
+    // - AGENT_ADAPTER: 'openai' | 'grpc' | 'mock' | 'oz'
     // ============================================================
     logger.info('📦 Adapters Configuration');
 
     // Create messaging adapter from configuration
-    this.messagingAdapter = AdapterFactory.createMessagingAdapter(config.MESSAGING_PLATFORM);
-    logger.info(`Messaging platform: ${config.MESSAGING_PLATFORM} (${this.messagingAdapter.constructor.name})`);
+    this.messagingAdapter = AdapterFactory.createMessagingAdapter(config.MESSAGING_ADAPTER);
+    logger.info(`Messaging adapter: ${this.messagingAdapter.constructor.name}`);
 
-    // Create AI agent adapter from configuration
-    this.agentAdapter = AdapterFactory.createAIAgentAdapter(config.AI_AGENT_TYPE);
-    logger.info(`AI agent type: ${config.AI_AGENT_TYPE} (${this.agentAdapter.constructor.name})`);
+    // Create agent adapter from configuration
+    this.agentAdapter = AdapterFactory.createAIAgentAdapter(config.AGENT_ADAPTER);
+    logger.info(`Agent adapter: ${this.agentAdapter.constructor.name}`);
 
     // ============================================================
 

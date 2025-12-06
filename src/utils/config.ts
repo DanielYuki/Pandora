@@ -5,6 +5,10 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['production', 'development']).default('development'),
   PORT: z.coerce.number().default(8080),
 
+  // Adapter Configuration
+  MESSAGING_ADAPTER: z.enum(['whatsapp', 'telegram', 'cli']).default('cli'),
+  AGENT_ADAPTER: z.enum(['openai', 'grpc', 'mock', 'oz']).default('mock'),
+
   // WhatsApp Configuration
   CLOUD_API_ACCESS_TOKEN: z.string().optional(),
   WA_PHONE_NUMBER_ID: z.string().optional(),
@@ -14,15 +18,9 @@ const envSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().optional(),
   TELEGRAM_WEBHOOK_SECRET: z.string().optional(),
 
-  // AI Agent Configuration
+  // Agent Configuration
   AGENT_SERVER_ADDRESS: z.string().default('localhost:50051'),
   OPENAI_API_KEY: z.string().optional(),
-  AI_AGENT_HTTP_ENDPOINT: z.string().optional(),
-  AI_AGENT_GRAPHQL_ENDPOINT: z.string().optional(),
-
-  // Adapter Configuration
-  MESSAGING_PLATFORM: z.enum(['whatsapp', 'telegram', 'cli']).default('cli'),
-  AI_AGENT_TYPE: z.enum(['openai', 'grpc', 'http', 'graphql', 'mock', 'oz']).default('mock'),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('debug'),
