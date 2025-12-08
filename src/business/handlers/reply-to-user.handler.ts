@@ -6,14 +6,14 @@ import type { DomainEvent, IEventBus } from '@/core/interfaces/event-bus.interfa
 import type { IMessagingService } from '@/core/interfaces/messaging-service.interface';
 import logger from '@/utils/logger';
 
-export class ProcessMessageHandler {
+export class ReplyToUserHandler {
   constructor(
     private eventBus: IEventBus,
     private messagingService: IMessagingService,
     private aiAgent: IAIAgent
   ) {
     this.eventBus.subscribe('message.received', this.handle.bind(this));
-    logger.info('ProcessMessageHandler subscribed to message.received');
+    logger.info('ReplyToUserHandler subscribed to message.received');
   }
 
   private async handle(event: DomainEvent): Promise<void> {

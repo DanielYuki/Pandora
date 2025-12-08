@@ -1,3 +1,5 @@
+// TODO: improve inference client for template (heavily based on GRPC -> think if this is the best approach)
+
 import * as grpc from '@grpc/grpc-js';
 import {
   type InferenceRequest,

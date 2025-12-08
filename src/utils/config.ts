@@ -4,6 +4,7 @@ import { z } from 'zod';
 const envSchema = z.object({
   NODE_ENV: z.enum(['production', 'development']).default('development'),
   PORT: z.coerce.number().default(8080),
+  HOST: z.string().default('0.0.0.0'),
 
   // Adapter Configuration
   MESSAGING_ADAPTER: z.enum(['whatsapp', 'telegram', 'cli']).default('cli'),

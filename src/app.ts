@@ -2,7 +2,7 @@ import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import helmet from 'helmet';
 import { TelegramWebhookController, WhatsAppWebhookController } from '@/api/controllers';
-import { ProcessMessageHandler } from '@/business/handlers';
+import { ReplyToUserHandler } from '@/business/handlers';
 import type { IAIAgent, IEventBus, IMessagingService } from '@/core/interfaces';
 import { CliAdapter, TelegramAdapter, WhatsAppAdapter } from '@/infrastructure';
 import { InMemoryEventBus } from '@/infrastructure/events';
@@ -43,7 +43,7 @@ class Application {
     // ============================================================
 
     // Create event handlers (subscribe to events)
-    new ProcessMessageHandler(this.eventBus, this.messagingAdapter, this.agentAdapter);
+    new ReplyToUserHandler(this.eventBus, this.messagingAdapter, this.agentAdapter);
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -172,9 +172,8 @@ class Application {
   }
 
   public async start(): Promise<void> {
-    // TODO: fix hostname
     const port = config.PORT;
-    const host = '0.0.0.0';
+    const host = config.HOST;
 
     this.app.listen(port, host, () => {
       logger.info(`Messaging Gateway running on ${host}:${port}`);
