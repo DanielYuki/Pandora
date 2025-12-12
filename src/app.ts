@@ -30,15 +30,15 @@ class Application {
     // - MESSAGING_ADAPTER: 'whatsapp' | 'telegram' | 'cli'
     // - AGENT_ADAPTER: 'openai' | 'grpc' | 'mock' | 'oz'
     // ============================================================
-    logger.info('📦 Adapters Configuration');
+    logger.info(
+      `📦 Adapters configuration — messaging: ${(config.MESSAGING_ADAPTER ?? '').toUpperCase()}, agent: ${(config.AGENT_ADAPTER ?? '').toUpperCase()}`
+    );
 
     // Create messaging adapter from configuration
     this.messagingAdapter = createMessagingAdapter(config.MESSAGING_ADAPTER);
-    logger.info(`Messaging adapter: ${this.messagingAdapter.constructor.name}`);
 
     // Create agent adapter from configuration
     this.agentAdapter = createAIAgentAdapter(config.AGENT_ADAPTER);
-    logger.info(`Agent adapter: ${this.agentAdapter.constructor.name}`);
 
     // ============================================================
 
@@ -183,9 +183,7 @@ class Application {
 
     // CLI startup only if the messaging adapter is a CliAdapter
     if (this.messagingAdapter instanceof CliAdapter) {
-      this.cliManager = new CliManager(this.eventBus, {
-        port: config.PORT,
-      });
+      this.cliManager = new CliManager(this.eventBus);
       this.cliManager.start();
     }
   }
